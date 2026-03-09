@@ -40,6 +40,12 @@ export const categoryType = defineType({
 			description: "Leave empty for default categories",
 		}),
 		defineField({
+			name: "user",
+			title: "User",
+			type: "reference",
+			to: [{ type: "user" }],
+		}),
+		defineField({
 			name: "isDefault",
 			title: "Is Default Category",
 			type: "boolean",

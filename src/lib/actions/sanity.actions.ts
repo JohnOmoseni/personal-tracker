@@ -35,6 +35,9 @@ export async function createCategory(data: any) {
 		const doc = {
 			_type: "category",
 			...data,
+			...(data.clerkUserId
+				? { user: { _type: "reference", _ref: `user-${data.clerkUserId}` } }
+				: {}),
 		};
 		const result = await writeClient.create(doc);
 		return { success: true, data: result };
@@ -49,6 +52,9 @@ export async function createTransaction(data: any) {
 		const doc = {
 			_type: "transaction",
 			...data,
+			...(data.clerkUserId
+				? { user: { _type: "reference", _ref: `user-${data.clerkUserId}` } }
+				: {}),
 		};
 		const result = await writeClient.create(doc);
 		return { success: true, data: result };
@@ -63,6 +69,9 @@ export async function createBudget(data: any) {
 		const doc = {
 			_type: "budget",
 			...data,
+			...(data.clerkUserId
+				? { user: { _type: "reference", _ref: `user-${data.clerkUserId}` } }
+				: {}),
 		};
 		const result = await writeClient.create(doc);
 		return { success: true, data: result };

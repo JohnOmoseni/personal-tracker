@@ -12,6 +12,12 @@ export const budgetType = defineType({
 			validation: (rule) => rule.required(),
 		}),
 		defineField({
+			name: "user",
+			title: "User",
+			type: "reference",
+			to: [{ type: "user" }],
+		}),
+		defineField({
 			name: "category",
 			title: "Category",
 			type: "reference",

@@ -60,3 +60,13 @@ export const mockTransactions = [
 export const mockBreakdown = [
 	// { name: "Housing", id: "housing", value: 1200, color: "#3B82F6" },
 ];
+
+export const mockBudgets = [
+	// {
+	// 	id: "1",
+	// 	categoryName: "Housing",
+	// 	spent: 1200,
+	// 	limit: 1500,
+	// 	color: "#3B82F6",
+	// },
+];

@@ -1,100 +1,43 @@
 "use client";
 
-import { useUser } from "@clerk/nextjs";
-import { useQuery } from "@tanstack/react-query";
-import { client } from "@/sanity/lib/client";
-import {
-	USER_BUDGETS_QUERY,
-	USER_ALL_TRANSACTIONS_QUERY,
-	USER_CATEGORIES_QUERY,
-} from "@/lib/sanity.queries";
 import { BudgetOverview } from "@/components/dashboard/budget-overview";
-import { DEFAULT_CATEGORIES } from "@/constants/data";
+import { DEFAULT_CATEGORIES, mockBudgets } from "@/constants/data";
 import { Progress } from "@/components/ui/progress";
-
-const mockBudgets = [
-	{
-		id: "1",
-		categoryName: "Housing",
-		spent: 1200,
-		limit: 1500,
-		color: "#3B82F6",
-	},
-	{
-		id: "2",
-		categoryName: "Food & Dining",
-		spent: 450,
-		limit: 500,
-		color: "#F59E0B",
-	},
-	{
-		id: "3",
-		categoryName: "Transportation",
-		spent: 300,
-		limit: 250,
-		color: "#8B5CF6",
-	},
-	{
-		id: "4",
-		categoryName: "Utilities",
-		spent: 150,
-		limit: 200,
-		color: "#10B981",
-	},
-];
+import {
+	useGetBudgets,
+	useGetCategories,
+	useGetTransactions,
+} from "@/lib/queries";
 
 export default function BudgetPage() {
-	const { user } = useUser();
-
-	const { data: categories } = useQuery({
-		queryKey: ["categories", user?.id],
-		queryFn: () =>
-			client.fetch(USER_CATEGORIES_QUERY, { clerkUserId: user?.id }),
-		enabled: !!user?.id,
-	});
-
-	const { data: budgets } = useQuery({
-		queryKey: ["budgets", user?.id],
-		queryFn: () => client.fetch(USER_BUDGETS_QUERY, { clerkUserId: user?.id }),
-		enabled: !!user?.id,
-	});
-
-	const { data: transactions } = useQuery({
-		queryKey: ["transactions", user?.id],
-		queryFn: () =>
-			client.fetch(USER_ALL_TRANSACTIONS_QUERY, { clerkUserId: user?.id }),
-		enabled: !!user?.id,
-	});
+	const { data: categories } = useGetCategories();
+	const { data: transactions } = useGetTransactions();
+	const { data: budgets } = useGetBudgets();
 
 	const actualCategories = categories?.length ? categories : DEFAULT_CATEGORIES;
-	const isDataLoaded = budgets && transactions;
+	const actualBudgets = budgets?.length ? budgets : mockBudgets;
+	const actualTransactions = transactions || [];
+	const isDataLoaded = budgets !== undefined && transactions !== undefined;
 
-	let budgetData = mockBudgets;
-	let allLimits = 2450;
-	let allSpending = 2100;
-	let isHealthy = true;
+	const expenses = actualTransactions.filter((t: any) => t.type === "expense");
 
-	if (isDataLoaded && budgets.length > 0) {
-		const expenses = transactions.filter((t: any) => t.type === "expense");
+	const budgetData = actualBudgets.map((b: any) => {
+		const bSpent = expenses
+			.filter((t: any) => t.category?._id === b.category?._id)
+			.reduce((sum: number, t: any) => sum + t.amount, 0);
 
-		budgetData = budgets.map((b: any) => {
-			const bSpent = expenses
-				.filter((t: any) => t.category?._id === b.category?._id)
-				.reduce((sum: number, t: any) => sum + t.amount, 0);
+		return {
+			id: b._id || b.id || Math.random().toString(),
+			categoryName: b.category?.name || b.categoryName || "Unknown",
+			spent: bSpent > 0 ? bSpent : b.spent || 0,
+			limit: b.amount || b.limit || 0,
+			color: b.category?.color || b.color || "#94a3b8",
+		};
+	});
 
-			return {
-				id: b._id,
-				categoryName: b.category?.name || "Unknown",
-				spent: bSpent,
-				limit: b.amount,
-				color: b.category?.color || "#94a3b8",
-			};
-		});
-
-		allLimits = budgetData.reduce((sum, b) => sum + b.limit, 0);
-		allSpending = budgetData.reduce((sum, b) => sum + b.spent, 0);
-		isHealthy = allSpending <= allLimits * 0.9;
-	}
+	const allLimits = budgetData.reduce((sum: any, b: any) => sum + b.limit, 0);
+	const allSpending = budgetData.reduce((sum: any, b: any) => sum + b.spent, 0);
+	const isHealthy = allLimits === 0 || allSpending <= allLimits * 0.9;
 
 	const percentageSpent = allLimits > 0 ? (allSpending / allLimits) * 100 : 0;
 	let statusText = "Safe";

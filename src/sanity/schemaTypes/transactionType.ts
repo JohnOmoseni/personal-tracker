@@ -12,6 +12,12 @@ export const transactionType = defineType({
 			validation: (rule) => rule.required(),
 		}),
 		defineField({
+			name: "user",
+			title: "User",
+			type: "reference",
+			to: [{ type: "user" }],
+		}),
+		defineField({
 			name: "amount",
 			title: "Amount",
 			type: "number",
