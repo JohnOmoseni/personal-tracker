@@ -116,6 +116,39 @@ export default function DashboardPage() {
 		? Object.values(expensesByCategory)
 		: mockBreakdown;
 
+	const getLocalDateStr = (date: Date) => {
+		const year = date.getFullYear();
+		const month = String(date.getMonth() + 1).padStart(2, "0");
+		const day = String(date.getDate()).padStart(2, "0");
+		return `${year}-${month}-${day}`;
+	};
+
+	const last7Days = Array.from({ length: 7 }, (_, i) => {
+		const d = new Date(now);
+		d.setDate(d.getDate() - (6 - i));
+		return getLocalDateStr(d);
+	});
+
+	const incomeChartData = last7Days.map((dateStr) => {
+		const total = actualTransactions
+			.filter(
+				(t: any) =>
+					t.type === "income" && getLocalDateStr(new Date(t.date)) === dateStr,
+			)
+			.reduce((sum: number, t: any) => sum + t.amount, 0);
+		return { value: total };
+	});
+
+	const expenseChartData = last7Days.map((dateStr) => {
+		const total = actualTransactions
+			.filter(
+				(t: any) =>
+					t.type === "expense" && getLocalDateStr(new Date(t.date)) === dateStr,
+			)
+			.reduce((sum: number, t: any) => sum + t.amount, 0);
+		return { value: total };
+	});
+
 	return (
 		<div className="space-y-6">
 			<div className="flex flex-col sm:flex-row sm:items-center justify-between gap-4">
@@ -150,10 +183,12 @@ export default function DashboardPage() {
 						<IncomeCard
 							amount={currentIncome || totalIncome || 0}
 							percentageChange={Math.round(incomeChange)}
+							chartData={incomeChartData}
 						/>
 						<ExpenseCard
 							amount={currentExpense || totalExpense || 0}
 							percentageChange={Math.round(expenseChange)}
+							chartData={expenseChartData}
 						/>
 					</div>
 
@@ -161,7 +196,6 @@ export default function DashboardPage() {
 						<SpendingBreakdownChart data={breakdownData as any} />
 						<BudgetSummaryCard
 							budgets={budgets || []}
-							categories={actualCategories}
 							actualTransactions={actualTransactions}
 						/>
 					</div>

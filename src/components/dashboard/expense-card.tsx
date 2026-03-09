@@ -5,7 +5,7 @@ import { ArrowDownRight, Receipt } from "lucide-react";
 import { Area, AreaChart, ResponsiveContainer } from "recharts";
 import { motion } from "framer-motion";
 
-const data = [
+const defaultData = [
 	{ value: 300 },
 	{ value: 400 },
 	{ value: 350 },
@@ -18,10 +18,13 @@ const data = [
 export function ExpenseCard({
 	amount = 0,
 	percentageChange = 0,
+	chartData = [],
 }: {
 	amount?: number;
 	percentageChange?: number;
+	chartData?: { value: number }[];
 }) {
+	const data = chartData.length > 0 ? chartData : defaultData;
 	return (
 		<motion.div
 			initial={{ opacity: 0, y: 20 }}
@@ -29,15 +32,15 @@ export function ExpenseCard({
 			transition={{ duration: 0.4, delay: 0.1, ease: "easeOut" }}
 			whileHover={{ y: -4, transition: { duration: 0.2 } }}
 		>
-			<Card className="relative overflow-hidden border-none shadow-md bg-gradient-to-br from-rose-50 to-rose-100/50 dark:from-rose-950/40 dark:to-rose-900/10">
+			<Card className="relative overflow-hidden border-none shadow-md bg-gradient-to-br from-rose-50 to-rose-100/50">
 				<CardHeader className="flex flex-row items-center justify-between pb-2 space-y-0 relative z-10">
-					<CardTitle className="text-sm font-medium text-rose-800 dark:text-rose-400 flex items-center gap-2">
-						<div className="p-2 bg-rose-100 dark:bg-rose-900/50 rounded-lg">
-							<Receipt className="w-4 h-4 text-rose-600 dark:text-rose-400" />
+					<CardTitle className="text-sm font-medium text-rose-800 flex items-center gap-2">
+						<div className="p-2 bg-rose-100 rounded-lg">
+							<Receipt className="w-4 h-4 text-rose-600" />
 						</div>
 						Total Expenses
 					</CardTitle>
-					<div className="flex items-center space-x-1 text-xs font-medium text-rose-600 dark:text-rose-400 bg-rose-100 dark:bg-rose-900/30 px-2 py-1 rounded-full">
+					<div className="flex items-center space-x-1 text-xs font-medium text-rose-600 bg-rose-100 px-2 py-1 rounded-full">
 						<ArrowDownRight className="w-3 h-3" />
 						<span>
 							{percentageChange > 0 ? "+" : ""}
@@ -46,18 +49,18 @@ export function ExpenseCard({
 					</div>
 				</CardHeader>
 				<CardContent className="relative z-10">
-					<div className="text-3xl font-bold text-rose-950 dark:text-rose-50">
+					<div className="text-3xl font-bold text-rose-950">
 						₦
 						{amount.toLocaleString(undefined, {
 							minimumFractionDigits: 2,
 							maximumFractionDigits: 2,
 						})}
 					</div>
-					<p className="text-xs text-rose-600/80 dark:text-rose-400/80 mt-1 font-medium">
+					<p className="text-xs text-rose-600/80 mt-1 font-medium">
 						vs last month
 					</p>
 				</CardContent>
-				<div className="absolute bottom-0 left-0 right-0 h-24 opacity-40 mix-blend-multiply dark:mix-blend-screen pointer-events-none">
+				<div className="absolute bottom-0 left-0 right-0 h-24 opacity-40 mix-blend-multiply pointer-events-none">
 					<ResponsiveContainer width="100%" height="100%">
 						<AreaChart
 							data={data}

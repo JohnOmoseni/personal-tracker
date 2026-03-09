@@ -9,6 +9,7 @@ export default async function DashboardLayout({
 	children: React.ReactNode;
 }) {
 	const user = await currentUser();
+	//check if user is logged in, if not redirect to signin page
 
 	if (user) {
 		await syncUserToSanity({

@@ -7,7 +7,6 @@ import {
 	ArrowUpRight,
 	HelpCircle,
 	Search,
-	Filter,
 	ChevronDown,
 } from "lucide-react";
 import * as LucideIcons from "lucide-react";
@@ -30,23 +29,6 @@ interface TransactionListProps {
 }
 
 const INITIAL_LOAD_COUNT = 10;
-
-const formatGroupDate = (dateString: string) => {
-	const date = new Date(dateString);
-	const today = new Date();
-	const yesterday = new Date(today);
-	yesterday.setDate(yesterday.getDate() - 1);
-
-	if (date.toDateString() === today.toDateString()) return "Today";
-	if (date.toDateString() === yesterday.toDateString()) return "Yesterday";
-
-	const showYear = date.getFullYear() !== today.getFullYear();
-	return date.toLocaleDateString("en-US", {
-		month: "short",
-		day: "numeric",
-		year: showYear ? "numeric" : undefined,
-	});
-};
 
 export function TransactionList({
 	transactions = [],
@@ -158,24 +140,23 @@ export function TransactionList({
 	return (
 		<Card className="col-span-1 border-none shadow-md flex flex-col h-full">
 			<CardHeader className="flex flex-col space-y-4 pb-4">
-				<div className="flex flex-row items-center justify-between">
-					<CardTitle className="text-lg font-semibold text-slate-900">
-						{isDashboard ? "Recent Transactions" : "All Transactions"}
-						{isDashboard && (
-							<span className="text-sm text-slate-500">
-								{displayedTransactions.length} transactions
-							</span>
-						)}
-						{isDashboard && (
-							<Link href="/transactions">
-								<span className="text-sm text-slate-500">See all</span>
-							</Link>
-						)}
-					</CardTitle>
-				</div>
+				<CardTitle className="text-lg w-full flex items-center justify-between gap-3 font-semibold text-slate-900">
+					{isDashboard ? "Recent Transactions" : "All Transactions"}
+					{isDashboard && (
+						<Link href="/transactions">
+							<Button
+								variant="ghost"
+								size="sm"
+								className="h-8 text-xs text-blue-600 hover:text-blue-700"
+							>
+								View All
+							</Button>
+						</Link>
+					)}
+				</CardTitle>
 
 				{!isDashboard && (
-					<div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-3">
+					<div className="flex items-start justify-between w-full gap-3">
 						<div className="relative">
 							<Search className="absolute left-3 top-1/2 -translate-y-1/2 h-4 w-4 text-slate-500" />
 							<Input
@@ -188,59 +169,62 @@ export function TransactionList({
 								}}
 							/>
 						</div>
-						<Select
-							value={selectedCategory}
-							onValueChange={(val) => {
-								setSelectedCategory(val);
-								setDisplayedCount(INITIAL_LOAD_COUNT);
-							}}
-						>
-							<SelectTrigger className="h-10 border-slate-200 dark:border-slate-800">
-								<SelectValue placeholder="Category" />
-							</SelectTrigger>
-							<SelectContent>
-								<SelectItem value="all">All Categories</SelectItem>
-								{categories.map((c) => (
-									<SelectItem key={c._id || c.id} value={c._id || c.id}>
-										{c.name}
-									</SelectItem>
-								))}
-							</SelectContent>
-						</Select>
-						<Select
-							value={amountFilter}
-							onValueChange={(val) => {
-								setAmountFilter(val);
-								setDisplayedCount(INITIAL_LOAD_COUNT);
-							}}
-						>
-							<SelectTrigger className="h-10 border-slate-200 dark:border-slate-800">
-								<SelectValue placeholder="Amount Filter" />
-							</SelectTrigger>
-							<SelectContent>
-								<SelectItem value="all">Any Amount</SelectItem>
-								<SelectItem value="under50">Under ₦50</SelectItem>
-								<SelectItem value="50to200">₦50 - ₦200</SelectItem>
-								<SelectItem value="over200">Over ₦200</SelectItem>
-							</SelectContent>
-						</Select>
-						<Select
-							value={sortOrder}
-							onValueChange={(val) => {
-								setSortOrder(val);
-								setDisplayedCount(INITIAL_LOAD_COUNT);
-							}}
-						>
-							<SelectTrigger className="h-10 border-slate-200 dark:border-slate-800">
-								<SelectValue placeholder="Sort By" />
-							</SelectTrigger>
-							<SelectContent>
-								<SelectItem value="newest">Newest First</SelectItem>
-								<SelectItem value="oldest">Oldest First</SelectItem>
-								<SelectItem value="highest">Highest Amount</SelectItem>
-								<SelectItem value="lowest">Lowest Amount</SelectItem>
-							</SelectContent>
-						</Select>
+
+						<div className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 gap-3">
+							<Select
+								value={selectedCategory}
+								onValueChange={(val) => {
+									setSelectedCategory(val);
+									setDisplayedCount(INITIAL_LOAD_COUNT);
+								}}
+							>
+								<SelectTrigger className="h-10 border-slate-200 dark:border-slate-800">
+									<SelectValue placeholder="Category" />
+								</SelectTrigger>
+								<SelectContent>
+									<SelectItem value="all">All Categories</SelectItem>
+									{categories.map((c) => (
+										<SelectItem key={c._id || c.id} value={c._id || c.id}>
+											{c.name}
+										</SelectItem>
+									))}
+								</SelectContent>
+							</Select>
+							<Select
+								value={amountFilter}
+								onValueChange={(val) => {
+									setAmountFilter(val);
+									setDisplayedCount(INITIAL_LOAD_COUNT);
+								}}
+							>
+								<SelectTrigger className="h-10 border-slate-200 dark:border-slate-800">
+									<SelectValue placeholder="Amount Filter" />
+								</SelectTrigger>
+								<SelectContent>
+									<SelectItem value="all">Any Amount</SelectItem>
+									<SelectItem value="under50">Under ₦50</SelectItem>
+									<SelectItem value="50to200">₦50 - ₦200</SelectItem>
+									<SelectItem value="over200">Over ₦200</SelectItem>
+								</SelectContent>
+							</Select>
+							<Select
+								value={sortOrder}
+								onValueChange={(val) => {
+									setSortOrder(val);
+									setDisplayedCount(INITIAL_LOAD_COUNT);
+								}}
+							>
+								<SelectTrigger className="h-10 border-slate-200 dark:border-slate-800">
+									<SelectValue placeholder="Sort By" />
+								</SelectTrigger>
+								<SelectContent>
+									<SelectItem value="newest">Newest First</SelectItem>
+									<SelectItem value="oldest">Oldest First</SelectItem>
+									<SelectItem value="highest">Highest Amount</SelectItem>
+									<SelectItem value="lowest">Lowest Amount</SelectItem>
+								</SelectContent>
+							</Select>
+						</div>
 					</div>
 				)}
 			</CardHeader>

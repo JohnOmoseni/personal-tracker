@@ -5,7 +5,7 @@ import { ArrowUpRight, Wallet } from "lucide-react";
 import { Area, AreaChart, ResponsiveContainer } from "recharts";
 import { motion } from "framer-motion";
 
-const data = [
+const defaultData = [
 	{ value: 400 },
 	{ value: 300 },
 	{ value: 500 },
@@ -18,10 +18,13 @@ const data = [
 export function IncomeCard({
 	amount = 0,
 	percentageChange = 0,
+	chartData = [],
 }: {
 	amount?: number;
 	percentageChange?: number;
+	chartData?: { value: number }[];
 }) {
+	const data = chartData.length > 0 ? chartData : defaultData;
 	return (
 		<motion.div
 			initial={{ opacity: 0, y: 20 }}
@@ -37,7 +40,7 @@ export function IncomeCard({
 						</div>
 						Total Income
 					</CardTitle>
-					<div className="flex items-center space-x-1 text-xs font-medium text-emerald-600 bg-emerald-100 dark:bg-emerald-900/30 px-2 py-1 rounded-full">
+					<div className="flex items-center space-x-1 text-xs font-medium text-emerald-600 bg-emerald-100 px-2 py-1 rounded-full">
 						<ArrowUpRight className="w-3 h-3" />
 						<span>
 							{percentageChange > 0 ? "+" : ""}
@@ -46,18 +49,18 @@ export function IncomeCard({
 					</div>
 				</CardHeader>
 				<CardContent className="relative z-10">
-					<div className="text-3xl font-bold text-emerald-950 dark:text-emerald-50">
+					<div className="text-3xl font-bold text-emerald-950">
 						₦
 						{amount.toLocaleString(undefined, {
 							minimumFractionDigits: 2,
 							maximumFractionDigits: 2,
 						})}
 					</div>
-					<p className="text-xs text-emerald-600/80 dark:text-emerald-400/80 mt-1 font-medium">
+					<p className="text-xs text-emerald-600/80 mt-1 font-medium">
 						vs last month
 					</p>
 				</CardContent>
-				<div className="absolute bottom-0 left-0 right-0 h-24 opacity-40 mix-blend-multiply dark:mix-blend-screen pointer-events-none">
+				<div className="absolute bottom-0 left-0 right-0 h-24 opacity-40 mix-blend-multiply pointer-events-none">
 					<ResponsiveContainer width="100%" height="100%">
 						<AreaChart
 							data={data}

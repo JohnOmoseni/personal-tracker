@@ -18,6 +18,7 @@ import {
 	isWithinInterval,
 	startOfYear,
 } from "date-fns";
+import { formatAmount } from "@/lib/utils";
 
 export function CashFlowChart({ transactions = [] }: { transactions: any[] }) {
 	const [timeRange, setTimeRange] = useState("6m");
@@ -36,7 +37,6 @@ export function CashFlowChart({ transactions = [] }: { transactions: any[] }) {
 			startDate = startOfYear(now);
 		}
 
-		// Calculate total balance overall
 		const allIncome = transactions
 			.filter((t) => t.type === "income")
 			.reduce((sum, t) => sum + t.amount, 0);
@@ -45,7 +45,6 @@ export function CashFlowChart({ transactions = [] }: { transactions: any[] }) {
 			.reduce((sum, t) => sum + t.amount, 0);
 		const totalBalance = allIncome - allExpense;
 
-		// Calculate current vs previous period for percentage change
 		const currentPeriodData = transactions.filter((t) =>
 			isWithinInterval(new Date(t.date), {
 				start: startOfMonth(now),
@@ -76,7 +75,6 @@ export function CashFlowChart({ transactions = [] }: { transactions: any[] }) {
 			percentageChange = 100;
 		}
 
-		// Group chart data by month
 		const filteredTransactions = transactions.filter(
 			(t: any) => new Date(t.date) >= startDate,
 		);
@@ -100,7 +98,6 @@ export function CashFlowChart({ transactions = [] }: { transactions: any[] }) {
 			return acc;
 		}, {});
 
-		// Fill in empty months
 		let currentMonthIt = new Date(startDate);
 		while (currentMonthIt <= now) {
 			const monthKey = format(currentMonthIt, "MMM yyyy");
@@ -128,20 +125,16 @@ export function CashFlowChart({ transactions = [] }: { transactions: any[] }) {
 		<Card className="col-span-1 border-none shadow-md">
 			<CardHeader className="flex flex-col sm:flex-row items-start sm:items-center justify-between pb-6 gap-4">
 				<div>
-					<CardTitle className="text-xl font-bold text-slate-900 dark:text-slate-100 flex items-center justify-between">
+					<CardTitle className="text-xl font-bold text-slate-900  flex items-center justify-between">
 						Cashflow
 					</CardTitle>
 					<div className="mt-2 text-sm text-slate-500">Total Balance</div>
 					<div className="flex items-center gap-3 mt-1">
-						<h2 className="text-3xl font-bold text-slate-900 dark:text-slate-50">
-							₦
-							{totalBalance.toLocaleString(undefined, {
-								minimumFractionDigits: 2,
-								maximumFractionDigits: 2,
-							})}
+						<h2 className="text-3xl font-bold text-slate-90 ">
+							{formatAmount(totalBalance)}
 						</h2>
 						<div
-							className={`flex items-center text-sm font-medium px-2 py-0.5 rounded-full ${isPositiveChange ? "bg-emerald-100 text-emerald-700 dark:bg-emerald-900/40 dark:text-emerald-400" : "bg-rose-100 text-rose-700 dark:bg-rose-900/40 dark:text-rose-400"}`}
+							className={`flex items-center text-sm font-medium px-2 py-0.5 rounded-full ${isPositiveChange ? "bg-emerald-100 text-emerald-700" : "bg-rose-100 text-rose-700"}`}
 						>
 							{isPositiveChange ? "↑" : "↓"}{" "}
 							{Math.abs(percentageChange).toFixed(1)}%
@@ -160,7 +153,7 @@ export function CashFlowChart({ transactions = [] }: { transactions: any[] }) {
 						</div>
 					</div>
 					<Select value={timeRange} onValueChange={setTimeRange}>
-						<SelectTrigger className="w-[120px] h-9 bg-white/50 dark:bg-slate-900 rounded-full border-slate-200 dark:border-slate-800 focus:ring-1">
+						<SelectTrigger className="w-[135px] [&_span]:truncate h-9 bg-white/50 rounded-full border-slate-200  focus:ring-1">
 							<SelectValue placeholder="Time Range" />
 						</SelectTrigger>
 						<SelectContent>
@@ -206,6 +199,7 @@ export function CashFlowChart({ transactions = [] }: { transactions: any[] }) {
 												<div className="space-y-1.5 flex flex-col">
 													{payload.map((entry, index) => (
 														<div
+															// biome-ignore lint/suspicious/noArrayIndexKey: any
 															key={`item-${index}`}
 															className="flex items-center gap-2 text-sm"
 														>
