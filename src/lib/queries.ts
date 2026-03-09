@@ -20,13 +20,16 @@ export const useGetCategories = () => {
 	});
 };
 
-export const useGetTransactions = () => {
+export const useGetTransactions = (search: string = "") => {
 	const { user } = useUser();
 
 	return useQuery({
-		queryKey: ["transactions", user?.id],
+		queryKey: ["transactions", user?.id, search],
 		queryFn: () =>
-			client.fetch(USER_ALL_TRANSACTIONS_QUERY, { clerkUserId: user?.id }),
+			client.fetch(USER_ALL_TRANSACTIONS_QUERY, {
+				clerkUserId: user?.id,
+				search,
+			}),
 		enabled: !!user?.id,
 	});
 };

@@ -4,7 +4,6 @@ import { IncomeCard } from "@/components/dashboard/income-card";
 import { ExpenseCard } from "@/components/dashboard/expense-card";
 import { SpendingBreakdownChart } from "@/components/charts/spending-breakdown-chart";
 import { CashFlowChart } from "@/components/charts/cashflow-chart";
-import { WeeklyTrends } from "@/components/charts/weekly-trends";
 import { BudgetSummaryCard } from "@/components/dashboard/budget-summary-card";
 import { TransactionList } from "@/components/dashboard/transaction-list";
 import { AddTransactionSheet } from "@/components/sheets/add-transaction-sheet";
@@ -21,6 +20,19 @@ import {
 } from "@/lib/queries";
 import { Skeleton } from "@/components/ui/skeleton";
 
+const now = new Date();
+
+const currentMonthStart = new Date(now.getFullYear(), now.getMonth(), 1);
+const previousMonthStart = new Date(now.getFullYear(), now.getMonth() - 1, 1);
+const previousMonthEnd = new Date(
+	now.getFullYear(),
+	now.getMonth(),
+	0,
+	23,
+	59,
+	59,
+);
+
 export default function DashboardPage() {
 	const { data: categories, isLoading: isCategoriesLoading } =
 		useGetCategories();
@@ -36,19 +48,6 @@ export default function DashboardPage() {
 		? transactions
 		: mockTransactions;
 
-	const now = new Date();
-	const currentMonthStart = new Date(now.getFullYear(), now.getMonth(), 1);
-	const previousMonthStart = new Date(now.getFullYear(), now.getMonth() - 1, 1);
-	const previousMonthEnd = new Date(
-		now.getFullYear(),
-		now.getMonth(),
-		0,
-		23,
-		59,
-		59,
-	);
-
-	// Current Month Totals
 	const currentMonthTransactions = actualTransactions.filter(
 		(t: any) => new Date(t.date) >= currentMonthStart,
 	);
@@ -59,7 +58,6 @@ export default function DashboardPage() {
 		.filter((t: any) => t.type === "expense")
 		.reduce((sum: number, t: any) => sum + t.amount, 0);
 
-	// Previous Month Totals
 	const previousMonthTransactions = actualTransactions.filter((t: any) => {
 		const d = new Date(t.date);
 		return d >= previousMonthStart && d <= previousMonthEnd;

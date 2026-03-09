@@ -22,10 +22,10 @@ export default async function DashboardLayout({
 		imageUrl: user.imageUrl,
 	});
 	return (
-		<div className="flex min-h-screen w-full bg-slate-50 dark:bg-slate-950">
+		<div className="flex min-h-screen w-full bg-slate-50">
 			<Sidebar />
 			<div className="flex flex-col flex-1 pb-16 md:pb-0">
-				<header className="flex h-16 items-center border-b px-4 md:px-6 justify-between bg-white dark:bg-slate-900">
+				<header className="flex h-16 items-center border-b px-4 md:px-6 justify-between bg-white">
 					<div className="font-semibold text-lg flex items-center md:hidden text-primary">
 						Tracker
 					</div>

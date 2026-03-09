@@ -47,50 +47,16 @@ export const typeOptions = [
 ];
 
 export const mockTransactions = [
-	{
-		_id: "1",
-		amount: 1200,
-		type: "income",
-		description: "Salary",
-		date: new Date().toISOString(),
-		category: { _ref: "housing" },
-	},
-	{
-		_id: "2",
-		amount: 80,
-		type: "expense",
-		description: "Internet",
-		date: new Date().toISOString(),
-		category: { _ref: "utilities" },
-	},
-	{
-		_id: "3",
-		amount: 45,
-		type: "expense",
-		description: "Groceries",
-		date: new Date().toISOString(),
-		category: { _ref: "food" },
-	},
-	{
-		_id: "4",
-		amount: 20,
-		type: "expense",
-		date: new Date().toISOString(),
-		category: { _ref: "transport" },
-	},
-	{
-		_id: "5",
-		amount: 120,
-		type: "expense",
-		description: "Concert",
-		date: new Date().toISOString(),
-		category: { _ref: "entertainment" },
-	},
+	// {
+	// 	_id: "1",
+	// 	amount: 0,
+	// 	type: "income",
+	// 	description: "Salary",
+	// 	date: new Date().toISOString(),
+	// 	category: { _ref: "housing" },
+	// },
 ];
 
 export const mockBreakdown = [
-	{ name: "Housing", id: "housing", value: 1200, color: "#3B82F6" },
-	{ name: "Food & Dining", id: "food", value: 450, color: "#F59E0B" },
-	{ name: "Transportation", id: "transport", value: 300, color: "#8B5CF6" },
-	{ name: "Utilities", id: "utilities", value: 150, color: "#10B981" },
+	// { name: "Housing", id: "housing", value: 1200, color: "#3B82F6" },
 ];

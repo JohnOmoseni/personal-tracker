@@ -22,7 +22,7 @@ export function SpendingBreakdownChart({ data }: { data: BreakdownData[] }) {
 	return (
 		<Card className="col-span-1 border-none shadow-md">
 			<CardHeader>
-				<CardTitle className="text-lg font-semibold text-slate-900 dark:text-slate-100">
+				<CardTitle className="text-lg font-semibold text-slate-900">
 					Spending Breakdown
 				</CardTitle>
 			</CardHeader>
@@ -53,7 +53,7 @@ export function SpendingBreakdownChart({ data }: { data: BreakdownData[] }) {
 								y="45%"
 								textAnchor="middle"
 								dominantBaseline="middle"
-								className="fill-slate-900 dark:fill-white text-xl font-bold"
+								className="fill-slate-900 text-xl font-bold"
 							>
 								₦{total.toLocaleString()}
 							</text>
@@ -84,7 +84,7 @@ export function SpendingBreakdownChart({ data }: { data: BreakdownData[] }) {
 								verticalAlign="bottom"
 								height={36}
 								formatter={(value, entry: any) => (
-									<span className="text-slate-600 dark:text-slate-400 font-medium text-sm ml-1">
+									<span className="text-slate-600 font-medium text-sm ml-1">
 										{value}
 									</span>
 								)}

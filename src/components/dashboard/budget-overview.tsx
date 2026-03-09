@@ -14,7 +14,7 @@ export function BudgetOverview({
 	return (
 		<Card className="col-span-1 border-none shadow-md">
 			<CardHeader className="flex flex-row items-center justify-between pb-4">
-				<CardTitle className="text-lg font-semibold text-slate-900 dark:text-slate-100">
+				<CardTitle className="text-lg font-semibold text-slate-900">
 					Budget Overview
 				</CardTitle>
 				<AddBudgetSheet categories={categories} />

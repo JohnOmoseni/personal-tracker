@@ -115,10 +115,10 @@ export default function BudgetPage() {
 		<div className="space-y-6">
 			<div className="flex flex-col sm:flex-row sm:items-center justify-between gap-4">
 				<div>
-					<h1 className="text-2xl font-bold tracking-tight text-slate-900 dark:text-slate-100">
+					<h1 className="text-2xl font-bold tracking-tight text-slate-900 ">
 						Budget Simulator
 					</h1>
-					<p className="text-sm text-slate-500 dark:text-slate-400">
+					<p className="text-sm text-slate-500">
 						Track your spending limits per category.
 					</p>
 				</div>
@@ -126,12 +126,12 @@ export default function BudgetPage() {
 
 			{isDataLoaded && (
 				<div className="grid grid-cols-1 md:grid-cols-3 gap-4 mb-8">
-					<div className="bg-white dark:bg-slate-900 p-6 rounded-xl border border-slate-200 dark:border-slate-800 shadow-sm flex flex-col justify-between">
-						<p className="text-sm font-medium text-slate-500 dark:text-slate-400">
+					<div className="bg-white p-6 rounded-xl border border-slate-200 shadow-sm flex flex-col justify-between">
+						<p className="text-sm font-medium text-slate-500">
 							Total Allocated
 						</p>
 						<div className="mt-2">
-							<h2 className="text-3xl font-bold text-slate-900 dark:text-slate-50">
+							<h2 className="text-3xl font-bold text-slate-900">
 								₦
 								{allLimits.toLocaleString(undefined, {
 									minimumFractionDigits: 2,
@@ -142,15 +142,15 @@ export default function BudgetPage() {
 						</div>
 					</div>
 
-					<div className="bg-white dark:bg-slate-900 p-6 rounded-xl border border-slate-200 dark:border-slate-800 shadow-sm flex flex-col justify-between">
+					<div className="bg-white p-6 rounded-xl border border-slate-200 shadow-sm flex flex-col justify-between">
 						<div className="flex items-center justify-between">
-							<p className="text-sm font-medium text-slate-500 dark:text-slate-400">
+							<p className="text-sm font-medium text-slate-500">
 								Actual Spending
 							</p>
 						</div>
 						<div className="mt-2">
 							<div className="flex items-center gap-2 mb-4">
-								<h2 className="text-3xl font-bold text-slate-900 dark:text-slate-50">
+								<h2 className="text-3xl font-bold text-slate-900">
 									₦
 									{allSpending.toLocaleString(undefined, {
 										minimumFractionDigits: 2,
@@ -158,7 +158,7 @@ export default function BudgetPage() {
 									})}
 								</h2>
 								<span
-									className={`text-xs font-medium px-2 py-0.5 rounded-full ${textColor} bg-slate-100 dark:bg-slate-800`}
+									className={`text-xs font-medium px-2 py-0.5 rounded-full ${textColor} bg-slate-100 `}
 								>
 									{statusText}
 								</span>
@@ -171,15 +171,15 @@ export default function BudgetPage() {
 						</div>
 					</div>
 
-					<div className="bg-white dark:bg-slate-900 p-6 rounded-xl border border-slate-200 dark:border-slate-800 shadow-sm flex flex-col justify-between">
+					<div className="bg-white p-6 rounded-xl border border-slate-200 shadow-sm flex flex-col justify-between">
 						<div className="flex items-center justify-between">
-							<p className="text-sm font-medium text-slate-500 dark:text-slate-400">
+							<p className="text-sm font-medium text-slate-500">
 								Remaining Balance
 							</p>
 						</div>
 						<div className="mt-2">
 							<div className="flex items-center gap-2 mb-4">
-								<h2 className="text-3xl font-bold text-slate-900 dark:text-slate-50">
+								<h2 className="text-3xl font-bold text-slate-900">
 									₦
 									{Math.max(0, allLimits - allSpending).toLocaleString(
 										undefined,
@@ -188,10 +188,10 @@ export default function BudgetPage() {
 								</h2>
 							</div>
 							<div className="flex gap-1 mt-4">
-								<div className="h-1.5 flex-1 bg-slate-200 dark:bg-slate-700 rounded-full"></div>
-								<div className="h-1.5 flex-1 bg-slate-200 dark:bg-slate-700 rounded-full"></div>
-								<div className="h-1.5 flex-1 bg-slate-200 dark:bg-slate-700 rounded-full"></div>
-								<div className="h-1.5 flex-[0.5] bg-slate-100 dark:bg-slate-800 rounded-full"></div>
+								<div className="h-1.5 flex-1 bg-slate-200 rounded-full"></div>
+								<div className="h-1.5 flex-1 bg-slate-200 rounded-full"></div>
+								<div className="h-1.5 flex-1 bg-slate-200 rounded-full"></div>
+								<div className="h-1.5 flex-[0.5] bg-slate-100  rounded-full"></div>
 							</div>
 						</div>
 					</div>
@@ -206,24 +206,20 @@ export default function BudgetPage() {
 					<div
 						className={`p-6 rounded-xl border shadow-sm ${
 							isHealthy
-								? "bg-emerald-50 dark:bg-emerald-950/40 border-emerald-100 dark:border-emerald-900/50"
-								: "bg-rose-50 dark:bg-rose-950/40 border-rose-100 dark:border-rose-900/50"
+								? "bg-emerald-50 border-emerald-100 "
+								: "bg-rose-50  border-rose-100 "
 						}`}
 					>
 						<h3
 							className={`font-semibold mb-2 ${
-								isHealthy
-									? "text-emerald-800 dark:text-emerald-400"
-									: "text-rose-800 dark:text-rose-400"
+								isHealthy ? "text-emerald-800" : "text-rose-800 "
 							}`}
 						>
 							Budget Health
 						</h3>
 						<p
 							className={`text-sm ${
-								isHealthy
-									? "text-emerald-600 dark:text-emerald-500"
-									: "text-rose-600 dark:text-rose-500"
+								isHealthy ? "text-emerald-600 " : "text-rose-600"
 							}`}
 						>
 							{isHealthy

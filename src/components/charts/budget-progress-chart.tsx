@@ -5,6 +5,7 @@ import { Trash2 } from "lucide-react";
 import { useMutation, useQueryClient } from "@tanstack/react-query";
 import { deleteDocument } from "@/lib/actions/sanity.actions";
 import { toast } from "sonner";
+import { cn } from "@/lib/utils";
 
 interface BudgetData {
 	id: string;
@@ -61,14 +62,14 @@ export function BudgetProgressChart({ data }: { data: BudgetData[] }) {
 					>
 						<div className="flex justify-between items-end">
 							<div>
-								<span className="font-semibold text-sm text-slate-900 dark:text-slate-100 flex items-center gap-2">
+								<span className="font-semibold text-sm text-slate-900  flex items-center gap-2">
 									<div
 										className="w-3 h-3 rounded-full shadow-sm"
 										style={{ backgroundColor: item.color }}
 									/>
 									{item.categoryName}
 								</span>
-								<span className="text-xs text-slate-500 dark:text-slate-400 mt-1 block">
+								<span className="text-xs text-slate-500 mt-1 block">
 									₦{item.spent.toLocaleString()} spent out of ₦
 									{item.limit.toLocaleString()}
 								</span>
@@ -79,7 +80,7 @@ export function BudgetProgressChart({ data }: { data: BudgetData[] }) {
 										"text-sm font-bold",
 										Math.round(percentage) >= 100
 											? "text-rose-500"
-											: "text-slate-700 dark:text-slate-300",
+											: "text-slate-700",
 									)}
 								>
 									{percentage.toFixed(0)}%
@@ -104,7 +105,7 @@ export function BudgetProgressChart({ data }: { data: BudgetData[] }) {
 								</button>
 							</div>
 						</div>
-						<div className="h-2 w-full bg-slate-100 dark:bg-slate-800 rounded-full overflow-hidden ring-1 ring-inset ring-slate-200/50 dark:ring-slate-700/50">
+						<div className="h-2 w-full bg-slate-100 rounded-full overflow-hidden ring-1 ring-inset ring-slate-200/50">
 							<motion.div
 								initial={{ width: 0 }}
 								animate={{ width: `${percentage}%` }}
@@ -127,12 +128,4 @@ export function BudgetProgressChart({ data }: { data: BudgetData[] }) {
 			})}
 		</div>
 	);
-}
-
-// Custom cn utility inside for self-containment if needed, or import from lib
-import { clsx, type ClassValue } from "clsx";
-import { twMerge } from "tailwind-merge";
-
-export function cn(...inputs: ClassValue[]) {
-	return twMerge(clsx(inputs));
 }

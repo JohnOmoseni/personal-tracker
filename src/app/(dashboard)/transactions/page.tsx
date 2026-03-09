@@ -1,12 +1,15 @@
 "use client";
+
+import { useState } from "react";
 import { TransactionList } from "@/components/dashboard/transaction-list";
 import { AddTransactionSheet } from "@/components/sheets/add-transaction-sheet";
 import { DEFAULT_CATEGORIES, mockTransactions } from "@/constants/data";
 import { useGetCategories, useGetTransactions } from "@/lib/queries";
 
 export default function TransactionsPage() {
+	const [search, setSearch] = useState("");
 	const { data: categories } = useGetCategories();
-	const { data: transactions } = useGetTransactions();
+	const { data: transactions } = useGetTransactions(search);
 
 	const actualCategories = categories?.length ? categories : DEFAULT_CATEGORIES;
 	const actualTransactions = transactions?.length
@@ -17,10 +20,10 @@ export default function TransactionsPage() {
 		<div className="space-y-6">
 			<div className="flex flex-col sm:flex-row sm:items-center justify-between gap-4">
 				<div>
-					<h1 className="text-2xl font-bold tracking-tight text-slate-900 dark:text-slate-100">
+					<h1 className="text-2xl font-bold tracking-tight text-slate-900">
 						Transactions
 					</h1>
-					<p className="text-sm text-slate-500 dark:text-slate-400">
+					<p className="text-sm text-slate-500">
 						Manage your income and expenses.
 					</p>
 				</div>
@@ -32,6 +35,8 @@ export default function TransactionsPage() {
 					transactions={actualTransactions as any}
 					categories={actualCategories}
 					isDashboard={false}
+					search={search}
+					onSearchChange={setSearch}
 				/>
 			</div>
 		</div>

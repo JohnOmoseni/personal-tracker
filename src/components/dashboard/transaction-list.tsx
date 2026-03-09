@@ -30,6 +30,8 @@ interface TransactionListProps {
 	transactions: Transaction[];
 	categories: any[];
 	isDashboard?: boolean;
+	search?: string;
+	onSearchChange?: (val: string) => void;
 }
 
 const INITIAL_LOAD_COUNT = 10;
@@ -38,11 +40,13 @@ export function TransactionList({
 	transactions = [],
 	categories = [],
 	isDashboard = false,
+	search = "",
+	onSearchChange,
 }: TransactionListProps) {
-	const [search, setSearch] = useState("");
 	const [selectedCategory, setSelectedCategory] = useState("all");
 	const [sortOrder, setSortOrder] = useState("newest");
 	const [amountFilter, setAmountFilter] = useState("all");
+
 	const [displayedCount, setDisplayedCount] = useState(INITIAL_LOAD_COUNT);
 	const queryClient = useQueryClient();
 
@@ -74,18 +78,7 @@ export function TransactionList({
 	const filteredAndSorted = useMemo(() => {
 		let result = [...transactions];
 
-		const categoryFinder = (ref?: string) =>
-			categories.find((c) => c._id === ref || c.id === ref);
-
-		if (search) {
-			result = result.filter(
-				(t) =>
-					t.description?.toLowerCase().includes(search.toLowerCase()) ||
-					categoryFinder(t.category?._ref)
-						?.name.toLowerCase()
-						.includes(search.toLowerCase()),
-			);
-		}
+		// Filtering by search term is now handled in the Sanity query directly.
 
 		if (selectedCategory !== "all") {
 			result = result.filter((t) => t.category?._ref === selectedCategory);
@@ -111,14 +104,7 @@ export function TransactionList({
 		});
 
 		return result;
-	}, [
-		transactions,
-		search,
-		selectedCategory,
-		sortOrder,
-		amountFilter,
-		categories,
-	]);
+	}, [transactions, selectedCategory, sortOrder, amountFilter]);
 
 	const displayedTransactions = isDashboard
 		? filteredAndSorted.slice(0, 5)
@@ -182,10 +168,10 @@ export function TransactionList({
 							<Search className="absolute left-3 top-1/2 -translate-y-1/2 h-4 w-4 text-slate-500" />
 							<Input
 								placeholder="Search..."
-								className="pl-9 h-10 border-slate-200 dark:border-slate-800"
+								className="pl-9 h-10 border-slate-200"
 								value={search}
 								onChange={(e) => {
-									setSearch(e.target.value);
+									if (onSearchChange) onSearchChange(e.target.value);
 									setDisplayedCount(INITIAL_LOAD_COUNT);
 								}}
 							/>
@@ -199,7 +185,7 @@ export function TransactionList({
 									setDisplayedCount(INITIAL_LOAD_COUNT);
 								}}
 							>
-								<SelectTrigger className="h-10 border-slate-200 dark:border-slate-800">
+								<SelectTrigger className="h-10 border-slate-200">
 									<SelectValue placeholder="Category" />
 								</SelectTrigger>
 								<SelectContent>
@@ -218,7 +204,7 @@ export function TransactionList({
 									setDisplayedCount(INITIAL_LOAD_COUNT);
 								}}
 							>
-								<SelectTrigger className="h-10 border-slate-200 dark:border-slate-800">
+								<SelectTrigger className="h-10 border-slate-200">
 									<SelectValue placeholder="Amount Filter" />
 								</SelectTrigger>
 								<SelectContent>
@@ -235,7 +221,7 @@ export function TransactionList({
 									setDisplayedCount(INITIAL_LOAD_COUNT);
 								}}
 							>
-								<SelectTrigger className="h-10 border-slate-200 dark:border-slate-800">
+								<SelectTrigger className="h-10 border-slate-200">
 									<SelectValue placeholder="Sort By" />
 								</SelectTrigger>
 								<SelectContent>
@@ -254,7 +240,7 @@ export function TransactionList({
 					{Object.entries(groupedTransactions).map(([group, trans]) => (
 						<div key={group} className="space-y-3">
 							{!isDashboard && (
-								<h4 className="text-sm font-semibold text-slate-500 dark:text-slate-400 capitalize bg-slate-50 dark:bg-slate-900/50 p-2 rounded-md">
+								<h4 className="text-sm font-semibold text-slate-500 capitalize bg-slate-50 p-2 rounded-md">
 									{group}
 								</h4>
 							)}
@@ -271,7 +257,7 @@ export function TransactionList({
 										initial={{ opacity: 0, x: -20 }}
 										animate={{ opacity: 1, x: 0 }}
 										transition={{ duration: 0.3, delay: i * 0.05 }}
-										className="flex items-center justify-between p-3 rounded-lg hover:bg-slate-50 dark:hover:bg-slate-900 transition-colors cursor-pointer group"
+										className="flex items-center justify-between p-3 rounded-lg hover:bg-slate-50 transition-colors cursor-pointer group"
 									>
 										<div className="flex items-center gap-4">
 											<div
@@ -287,7 +273,7 @@ export function TransactionList({
 												<p className="font-semibold text-sm text-slate-900">
 													{t.description || cat?.name || "Unknown"}
 												</p>
-												<p className="text-xs text-slate-500 dark:text-slate-400 mt-0.5">
+												<p className="text-xs text-slate-500 mt-0.5">
 													{new Date(t.date).toLocaleDateString("en-US", {
 														month: "short",
 														day: "numeric",
@@ -347,7 +333,7 @@ export function TransactionList({
 				</div>
 
 				{!isDashboard && hasMore && (
-					<div className="flex justify-center mt-6 pt-4 border-t border-slate-100 dark:border-slate-800">
+					<div className="flex justify-center mt-6 pt-4 border-t border-slate-100">
 						<Button
 							variant="outline"
 							className="w-full sm:w-auto"

@@ -27,7 +27,7 @@ export const USER_TRANSACTIONS_QUERY = defineQuery(`
 `);
 
 export const USER_ALL_TRANSACTIONS_QUERY = defineQuery(`
-  *[_type == "transaction" && clerkUserId == $clerkUserId] | order(date desc) {
+  *[_type == "transaction" && clerkUserId == $clerkUserId && ($search == "" || description match $search + "*" || category->name match $search + "*")] | order(date desc) {
     _id,
     amount,
     type,
