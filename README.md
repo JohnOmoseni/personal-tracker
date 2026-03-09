@@ -4,7 +4,7 @@ A modern, animated personal finance tracking dashboard built to help individuals
 
 ## 🚀 What I Built & Why I Made Certain Choices
 
-I built a comprehensive personal finance tracking application featuring a dashboard, transaction management, categorized spending breakdowns, and a budget simulator.
+I built a personal finance tracking application featuring a dashboard, transaction management, categorized spending breakdowns, and a budget simulator.
 
 ## 🚀 Live Demo
 
