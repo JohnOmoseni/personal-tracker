@@ -3,7 +3,6 @@
 import { useMutation, useQueryClient } from "@tanstack/react-query";
 import { useUser } from "@clerk/nextjs";
 import { createTransaction } from "@/lib/actions/sanity.actions";
-
 import { useForm, Controller } from "react-hook-form";
 import { zodResolver } from "@hookform/resolvers/zod";
 import * as z from "zod";
@@ -42,12 +41,12 @@ export function AddTransactionSheet({
 }: {
 	categories?: any[];
 }) {
-	const [open, setOpen] = useState(false);
 	const { user } = useUser();
+	const [open, setOpen] = useState(false);
 	const queryClient = useQueryClient();
 
 	const mutation = useMutation({
-		mutationFn: async (data: TransactionFormValues) => {
+		mutationFn: async ({ categoryId, ...data }: TransactionFormValues) => {
 			if (!user?.id) throw new Error("Not authenticated");
 			return createTransaction({
 				...data,
@@ -55,7 +54,7 @@ export function AddTransactionSheet({
 				date: data.date.toISOString(),
 				category: {
 					_type: "reference",
-					_ref: data.categoryId,
+					_ref: categoryId,
 				},
 			});
 		},
@@ -82,7 +81,7 @@ export function AddTransactionSheet({
 
 	const categoryOptions = categories.map((c) => ({
 		label: c.name,
-		value: c.id,
+		value: c._id || c.id,
 	}));
 
 	const onSubmit = (data: TransactionFormValues) => {

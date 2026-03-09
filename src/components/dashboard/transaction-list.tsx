@@ -78,8 +78,6 @@ export function TransactionList({
 	const filteredAndSorted = useMemo(() => {
 		let result = [...transactions];
 
-		// Filtering by search term is now handled in the Sanity query directly.
-
 		if (selectedCategory !== "all") {
 			result = result.filter((t) => t.category?._ref === selectedCategory);
 		}

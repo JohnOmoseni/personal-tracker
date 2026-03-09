@@ -4,7 +4,6 @@ import { useUser } from "@clerk/nextjs";
 import { useQuery } from "@tanstack/react-query";
 import { client } from "@/sanity/lib/client";
 import {
-	USER_ALL_TRANSACTIONS_QUERY,
 	USER_CATEGORIES_QUERY,
 	USER_BUDGETS_QUERY,
 } from "@/lib/sanity.queries";
@@ -25,11 +24,32 @@ export const useGetTransactions = (search: string = "") => {
 
 	return useQuery({
 		queryKey: ["transactions", user?.id, search],
-		queryFn: () =>
-			client.fetch(USER_ALL_TRANSACTIONS_QUERY, {
+		queryFn: () => {
+			const searchQuery = search
+				? `&& (description match $search + "*" || category->name match $search + "*")`
+				: "";
+
+			const query = `
+				*[_type == "transaction" && (clerkUserId == $clerkUserId || user->clerkId == $clerkUserId) ${searchQuery}] | order(date desc) {
+					_id,
+					amount,
+					type,
+					description,
+					date,
+					category->{
+						_id,
+						name,
+						color,
+						icon
+					}
+				}
+			`;
+
+			return client.fetch(query, {
 				clerkUserId: user?.id,
 				search,
-			}),
+			});
+		},
 		enabled: !!user?.id,
 	});
 };
