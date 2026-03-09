@@ -92,7 +92,10 @@ export function AddTransactionSheet({
 	return (
 		<Sheet open={open} onOpenChange={setOpen}>
 			<SheetTrigger asChild>
-				<Button className="gap-2 shadow-sm rounded-full sm:rounded-none fixed bottom-6 right-6 sm:static h-14 w-14 sm:h-10 sm:w-auto p-0 sm:px-4 sm:py-2 z-50">
+				<Button
+					title="add-transaction"
+					className="gap-2 shadow-sm rounded-full sm:rounded-none fixed bottom-6 right-6 sm:static h-14 w-14 sm:h-10 sm:w-auto p-0 sm:px-4 sm:py-2 z-50"
+				>
 					<Plus className="size-8 sm:h-4 sm:w-4" />
 					<span className="hidden sm:inline">Add Transaction</span>
 				</Button>

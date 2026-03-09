@@ -1,6 +1,6 @@
 import { UserButton } from "@clerk/nextjs";
 import { currentUser } from "@clerk/nextjs/server";
-import { Sidebar } from "@/components/dashboard/sidebar";
+import { Sidebar, MobileSidebar } from "@/components/dashboard/sidebar";
 import { syncUserToSanity } from "@/lib/actions/sanity.actions";
 import { redirect } from "next/navigation";
 
@@ -26,7 +26,8 @@ export default async function DashboardLayout({
 			<Sidebar />
 			<div className="flex flex-col flex-1 pb-16 md:pb-0">
 				<header className="flex h-16 items-center border-b px-4 md:px-6 justify-between bg-white">
-					<div className="font-semibold text-lg flex items-center md:hidden text-primary">
+					<div className="font-semibold text-lg flex items-center md:hidden text-primary gap-2">
+						<MobileSidebar />
 						Tracker
 					</div>
 					<div className="ml-auto flex items-center gap-4">

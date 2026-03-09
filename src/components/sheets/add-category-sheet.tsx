@@ -97,7 +97,7 @@ export function AddCategorySheet() {
 					className="gap-1 bg-white"
 				>
 					<Plus className="h-4 w-4" />
-					<span className="hidden sm:inline">Add Category</span>
+					<span className="inline">Add Category</span>
 				</Button>
 			</SheetTrigger>
 			<SheetContent side="right" className="w-full sm:max-w-md overflow-y-auto">
