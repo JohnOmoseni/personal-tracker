@@ -58,7 +58,6 @@ export function AddTransactionSheet({
 		},
 		onSuccess: () => {
 			queryClient.invalidateQueries({ queryKey: ["transactions"] });
-			queryClient.invalidateQueries({ queryKey: ["dashboard-stats"] });
 			toast.success("Transaction added successfully!");
 			setOpen(false);
 			form.reset();

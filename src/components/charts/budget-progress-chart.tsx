@@ -27,7 +27,6 @@ export function BudgetProgressChart({ data }: { data: BudgetData[] }) {
 		onSuccess: () => {
 			toast.success("Budget deleted successfully");
 			queryClient.invalidateQueries({ queryKey: ["budgets"] });
-			queryClient.invalidateQueries({ queryKey: ["dashboard-stats"] });
 		},
 		onError: () => {
 			toast.error("Failed to delete budget");

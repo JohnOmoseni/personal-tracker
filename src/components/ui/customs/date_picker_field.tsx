@@ -36,14 +36,14 @@ export function DatePickerField<T extends FieldValues>({
 			name={name}
 			render={({ field }) => (
 				<FormItem className="flex flex-col">
-					<FormLabel className="text-sm font-medium mb-1">{label}</FormLabel>
+					<FormLabel className="w-fit">{label}</FormLabel>
 					<Popover>
 						<PopoverTrigger asChild>
 							<FormControl>
 								<Button
 									variant={"outline"}
 									className={cn(
-										"w-full h-[48px] pl-3 text-left font-normal bg-slate-50 dark:bg-slate-900 border-slate-200 dark:border-slate-800 transition-all focus-visible:ring-primary shadow-sm bg-white",
+										"w-full h-[48px] pl-3 text-left font-normal dark:bg-slate-900 border-slate-200 dark:border-slate-800 transition-all focus-visible:ring-primary shadow-sm bg-white",
 										!field.value && "text-muted-foreground",
 									)}
 								>
