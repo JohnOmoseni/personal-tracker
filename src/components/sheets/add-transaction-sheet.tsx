@@ -22,9 +22,7 @@ import { DatePickerField } from "@/components/ui/customs/date_picker_field";
 import { useState } from "react";
 import { toast } from "sonner";
 import { typeOptions } from "@/constants/data";
-import SelectField, {
-	SelectFormField,
-} from "@/components/ui/customs/custom_select";
+import { SelectFormField } from "@/components/ui/customs/custom_select";
 
 const transactionSchema = z.object({
 	amount: z.coerce.number().positive("Amount must be positive"),

@@ -31,19 +31,19 @@ const budgetSchema = z.object({
 type BudgetFormValues = z.infer<typeof budgetSchema>;
 
 export function AddBudgetSheet({ categories = [] }: { categories?: any[] }) {
-	const [open, setOpen] = useState(false);
 	const { user } = useUser();
+	const [open, setOpen] = useState(false);
 	const queryClient = useQueryClient();
 
 	const mutation = useMutation({
-		mutationFn: async (data: BudgetFormValues) => {
+		mutationFn: async ({ categoryId, ...data }: BudgetFormValues) => {
 			if (!user?.id) throw new Error("Not authenticated");
 			return createBudget({
 				...data,
 				clerkUserId: user.id,
 				category: {
 					_type: "reference",
-					_ref: data.categoryId,
+					_ref: categoryId,
 				},
 			});
 		},
