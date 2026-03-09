@@ -8,10 +8,14 @@ import {
 	HelpCircle,
 	Search,
 	ChevronDown,
+	Trash2,
 } from "lucide-react";
 import * as LucideIcons from "lucide-react";
 import { useState, useMemo } from "react";
 import { Input } from "@/components/ui/input";
+import { useMutation, useQueryClient } from "@tanstack/react-query";
+import { toast } from "sonner";
+import { deleteDocument } from "@/lib/actions/sanity.actions";
 import {
 	Select,
 	SelectContent,
@@ -40,6 +44,23 @@ export function TransactionList({
 	const [sortOrder, setSortOrder] = useState("newest");
 	const [amountFilter, setAmountFilter] = useState("all");
 	const [displayedCount, setDisplayedCount] = useState(INITIAL_LOAD_COUNT);
+	const queryClient = useQueryClient();
+
+	const deleteMutation = useMutation({
+		mutationFn: async (id: string) => {
+			const res = await deleteDocument(id);
+			if (!res.success) throw new Error("Failed to delete transaction");
+			return res;
+		},
+		onSuccess: () => {
+			toast.success("Transaction deleted successfully");
+			queryClient.invalidateQueries({ queryKey: ["transactions"] });
+			queryClient.invalidateQueries({ queryKey: ["dashboard-stats"] });
+		},
+		onError: () => {
+			toast.error("Failed to delete transaction");
+		},
+	});
 
 	const getCategory = (ref?: string) =>
 		categories.find((c) => c._id === ref || c.id === ref);
@@ -275,21 +296,42 @@ export function TransactionList({
 												</p>
 											</div>
 										</div>
-										<div
-											className={`flex items-center gap-1 font-semibold ${
-												isIncome ? "text-emerald-600" : "text-slate-900"
-											}`}
-										>
-											{isIncome ? (
-												<ArrowUpRight className="w-4 h-4" />
-											) : (
-												<ArrowDownRight className="w-4 h-4 text-rose-500" />
-											)}
-											₦
-											{t.amount.toLocaleString(undefined, {
-												minimumFractionDigits: 2,
-												maximumFractionDigits: 2,
-											})}
+										<div className="flex flex-col items-end gap-1">
+											<div
+												className={`flex items-center gap-1 font-semibold ${
+													isIncome ? "text-emerald-600" : "text-slate-900"
+												}`}
+											>
+												{isIncome ? (
+													<ArrowUpRight className="w-4 h-4" />
+												) : (
+													<ArrowDownRight className="w-4 h-4 text-rose-500" />
+												)}
+												₦
+												{t.amount.toLocaleString(undefined, {
+													minimumFractionDigits: 2,
+													maximumFractionDigits: 2,
+												})}
+											</div>
+											<Button
+												variant="ghost"
+												size="sm"
+												className="h-6 px-2 text-rose-500 hover:text-rose-600 hover:bg-rose-50 opacity-0 group-hover:opacity-100 transition-opacity"
+												onClick={(e) => {
+													e.preventDefault();
+													e.stopPropagation();
+													if (
+														window.confirm(
+															"Are you sure you want to delete this transaction?",
+														)
+													) {
+														deleteMutation.mutate(t._id);
+													}
+												}}
+												disabled={deleteMutation.isPending}
+											>
+												<Trash2 className="w-3 h-3 mr-1" /> Delete
+											</Button>
 										</div>
 									</motion.div>
 								);

@@ -2,6 +2,7 @@ import { UserButton } from "@clerk/nextjs";
 import { currentUser } from "@clerk/nextjs/server";
 import { Sidebar } from "@/components/dashboard/sidebar";
 import { syncUserToSanity } from "@/lib/actions/sanity.actions";
+import { redirect } from "next/navigation";
 
 export default async function DashboardLayout({
 	children,
@@ -9,17 +10,17 @@ export default async function DashboardLayout({
 	children: React.ReactNode;
 }) {
 	const user = await currentUser();
-	//check if user is logged in, if not redirect to signin page
-
-	if (user) {
-		await syncUserToSanity({
-			id: user.id,
-			email: user.emailAddresses[0]?.emailAddress ?? "",
-			firstName: user.firstName,
-			lastName: user.lastName,
-			imageUrl: user.imageUrl,
-		});
+	if (!user) {
+		redirect("/sign-in");
 	}
+
+	await syncUserToSanity({
+		id: user.id,
+		email: user.emailAddresses[0]?.emailAddress ?? "",
+		firstName: user.firstName,
+		lastName: user.lastName,
+		imageUrl: user.imageUrl,
+	});
 	return (
 		<div className="flex min-h-screen w-full bg-slate-50 dark:bg-slate-950">
 			<Sidebar />

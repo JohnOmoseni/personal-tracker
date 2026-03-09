@@ -71,3 +71,13 @@ export async function createBudget(data: any) {
 		return { success: false, error };
 	}
 }
+
+export async function deleteDocument(id: string) {
+	try {
+		const result = await writeClient.delete(id);
+		return { success: true, data: result };
+	} catch (error) {
+		console.error("Error deleting document:", error);
+		return { success: false, error };
+	}
+}
