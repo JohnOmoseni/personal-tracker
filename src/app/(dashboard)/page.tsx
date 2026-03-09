@@ -19,7 +19,6 @@ import {
 	useGetBudgets,
 } from "@/lib/queries";
 import { Skeleton } from "@/components/ui/skeleton";
-import { useUser } from "@clerk/nextjs";
 
 const now = new Date();
 const currentMonthStart = new Date(now.getFullYear(), now.getMonth(), 1);
@@ -39,9 +38,6 @@ export default function DashboardPage() {
 	const { data: transactions, isLoading: isTransactionsLoading } =
 		useGetTransactions();
 	const { data: budgets, isLoading: isBudgetsLoading } = useGetBudgets();
-	const { user } = useUser();
-
-	console.log("categories", categories, transactions, budgets, user);
 
 	const isLoading =
 		isCategoriesLoading || isTransactionsLoading || isBudgetsLoading;

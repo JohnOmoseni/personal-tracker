@@ -31,7 +31,7 @@ export default async function DashboardLayout({
 						Tracker
 					</div>
 					<div className="ml-auto flex items-center gap-4">
-						<UserButton signInUrl="/" />
+						<UserButton signInUrl="/sign-in" />
 					</div>
 				</header>
 				<main className="flex-1 p-4 md:p-6 lg:p-8">{children}</main>

@@ -1,6 +1,31 @@
 "use server";
 
 import { writeClient } from "@/sanity/lib/write-client";
+import { DEFAULT_CATEGORIES } from "@/constants/data";
+
+async function ensureCategoryExists(categoryId: string, clerkUserId: string) {
+	const defaultCat = DEFAULT_CATEGORIES.find((c) => c.id === categoryId);
+	if (!defaultCat) return categoryId; // It's already a Sanity ID
+
+	const docId = `category-${clerkUserId}-${categoryId}`;
+
+	try {
+		await writeClient.createIfNotExists({
+			_id: docId,
+			_type: "category",
+			name: defaultCat.name,
+			type: defaultCat.type,
+			color: defaultCat.color,
+			icon: defaultCat.icon,
+			clerkUserId: clerkUserId,
+			user: { _type: "reference", _ref: `user-${clerkUserId}` },
+		});
+	} catch (error) {
+		console.error("Failed to lazily create default category:", error);
+	}
+
+	return docId;
+}
 
 export async function syncUserToSanity(user: {
 	id: string;
@@ -49,9 +74,21 @@ export async function createCategory(data: any) {
 
 export async function createTransaction(data: any) {
 	try {
+		let finalCategoryId = data.category._ref;
+		if (data.clerkUserId) {
+			finalCategoryId = await ensureCategoryExists(
+				finalCategoryId,
+				data.clerkUserId,
+			);
+		}
+
 		const doc = {
 			_type: "transaction",
 			...data,
+			category: {
+				_type: "reference",
+				_ref: finalCategoryId,
+			},
 			...(data.clerkUserId
 				? { user: { _type: "reference", _ref: `user-${data.clerkUserId}` } }
 				: {}),
@@ -66,9 +103,21 @@ export async function createTransaction(data: any) {
 
 export async function createBudget(data: any) {
 	try {
+		let finalCategoryId = data.category._ref;
+		if (data.clerkUserId) {
+			finalCategoryId = await ensureCategoryExists(
+				finalCategoryId,
+				data.clerkUserId,
+			);
+		}
+
 		const doc = {
 			_type: "budget",
 			...data,
+			category: {
+				_type: "reference",
+				_ref: finalCategoryId,
+			},
 			...(data.clerkUserId
 				? { user: { _type: "reference", _ref: `user-${data.clerkUserId}` } }
 				: {}),
