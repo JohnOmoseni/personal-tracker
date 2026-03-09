@@ -161,8 +161,8 @@ export function TransactionList({
 				</CardTitle>
 
 				{!isDashboard && (
-					<div className="flex items-start justify-between w-full gap-3">
-						<div className="relative">
+					<div className="flex flex-wrap items-start justify-between w-full gap-3">
+						<div className="relative ">
 							<Search className="absolute left-3 top-1/2 -translate-y-1/2 h-4 w-4 text-slate-500" />
 							<Input
 								placeholder="Search..."
@@ -175,7 +175,7 @@ export function TransactionList({
 							/>
 						</div>
 
-						<div className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 gap-3">
+						<div className="grid grid-cols-1 w-full sm:grid-cols-[repeat(auto-fit,minmax(100px,max-content))] gap-3">
 							<Select
 								value={selectedCategory}
 								onValueChange={(val) => {
